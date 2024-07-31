@@ -1,0 +1,33 @@
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.no-spacing {
+  line-height: 16px;
+}
+
+.bg-hero {
+  object-fit: fill;
+  object-position: bottom;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-class {
+  width: 100%;
+  height: 55vh;
+  overflow: hidden;
+}
+
+@media (max-width: 992px) {
+  .bg-class {
+    height: 70dvh;
+  }
+}
