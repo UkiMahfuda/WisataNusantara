@@ -26,3 +26,23 @@ function signup_acc($dataUsers)
 
     return mysqli_affected_rows($conn);
 }
+
+
+function getData($query)
+{
+    global $conn;
+    $result = mysqli_query($conn, $query);
+    $array = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $array[] = $row;
+    }
+    return $array;
+}
+
+function deleteData($id)
+{
+    global $conn;
+    mysqli_query($conn, "DELETE FROM paket_wisata WHERE id = '$id'");
+
+    return mysqli_affected_rows($conn);
+}

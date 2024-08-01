@@ -39,13 +39,13 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">
+              <a class="nav-link " aria-current="page" href="index.php">
                 <span data-feather="home"></span>
                 Dashboard
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="customers.php">
+              <a class="nav-link active" href="#">
                 <span data-feather="file"></span>
                 Pesanan Customers
               </a>
@@ -70,36 +70,32 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <h2>Paket Wisata</h2>
-
-        <button type="button" class="my-3 btn btn-success" data-bs-toggle="modal" data-bs-target="#tambahPaketWisata">
-          Tambah Paket Wisata
-        </button>
+        <h2>Pesanan Wisata Customers</h2>
 
         <div class="table-responsive">
           <table class="table table-striped table-sm">
             <thead>
               <tr>
                 <th scope="col">No</th>
+                <th scope="col">Nama Pemesan</th>
                 <th scope="col">Nama Paket</th>
-                <th scope="col">Deskripsi</th>
-                <th scope="col">Harga</th>
+                <th scope="col">Tgl Pesan</th>
                 <th scope="col">Durasi</th>
-                <th scope="col">Pcs</th>
+                <th scope="col">Jumlah Orang</th>
+                <th scope="col">Total Harga</th>
                 <th scope="col">Option</th>
               </tr>
             </thead>
             <tbody>
               
-           <?php $no = 1;?> 
-            <?php foreach ($query as $getData) : ?>
               <tr >
-                <td><?php echo $no ?></td>
-                <td><?php echo $getData['nama_paket'] ?></td>
-                <td class="text-truncate" style="max-width: 200px;"><?php echo $getData['deskripsi'] ?></td>
-                <td>Rp.<?php echo $getData['harga'] ?></td>                
-                <td><?php echo $getData['durasi'] ?> Hari</td>
-                <td><?php echo $getData['pcs'] ?> Orang</td>
+                <td></td>
+                <td></td>
+                <td></td>                
+                <td></td>
+                <td></td>                
+                <td></td>
+                <td></td>
                 <td>
                   <div class="d-flex justify-content-start">
                       <button class="btn btn-primary px-2 pt-0 pb-1" data-bs-toggle="modal" data-bs-target="#updatePaketWisata">
@@ -114,59 +110,12 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                   </div>
                 </td>
               </tr>
-              <?php $no++; ?>
-              <?php endforeach; ?>
             </tbody>
           </table>
         </div>
       </main>
     </div>
   </div>
-
-  <!-- PopUp Tambah Paket Wisata -->
-        <div class="modal fade" id="tambahPaketWisata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="tambahPaketWisataLabel" aria-hidden="true">
-          <div class="modal-dialog ">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="tambahPaketWisataLabel">Form Tambah Paket Wisata</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-            <form>
-              <div class="modal-body ">
-                  <div class="mb-3">
-                    <label for="nama_paket" class="form-label">Nama Paket Wisata</label>
-                    <input type="text" class="form-control" id="nama_paket" name="nama_paket">
-                  </div>
-                  <div class="mb-3">
-                    <label for="deskripsi" class="form-label">Deskripsi</label>
-                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="2"></textarea>
-                  </div>
-                  <div class="mb-3">
-                    <label for="harga" class="form-label">Harga</label>
-                    <input type="number" class="form-control" id="harga" name="harga">
-                  </div>
-                  <div class="mb-3">
-                    <label for="durasi" class="form-label">Durasi</label>
-                    <input type="number" class="form-control" id="durasi" name="durasi">
-                  </div>
-                  <div class="mb-3">
-                    <label for="pcs" class="form-label">Jumlah Orang</label>
-                    <input type="number" class="form-control" id="pcs" name="pcs">
-                  </div>
-                  <div class="mb-3">
-                    <label for="gambar" class="form-label">Gambar Wisata</label>
-                    <input class="form-control" type="file" id="gambar" name="gambar">
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
-                  <button type="button" class="btn btn-primary">Tambah</button>
-                </div>
-              </div>
-            </form>
-            </div>
-          </div>
-        </div>
 
  <!-- PopUp Update Paket Wisata -->
         <div class="modal fade" id="updatePaketWisata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updatePaketWisataLabel" aria-hidden="true">
