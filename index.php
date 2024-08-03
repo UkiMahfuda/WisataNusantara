@@ -181,7 +181,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
     </main>
 
     <!-- Form Pesan Paket Wisata -->
-        <div class="modal fade" id="modalFormPesan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalFormPesanLabel" aria-hidden="true">
+        <!-- <div class="modal fade" id="modalFormPesan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalFormPesanLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -242,7 +242,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
 
     <!-- PopUp Login -->

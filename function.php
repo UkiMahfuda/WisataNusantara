@@ -2,9 +2,9 @@
 $conn = mysqli_connect("localhost:3307", "root", "", "db_pariwisata");
 
 // if (!$conn) {
-//     die("Connection Failed: ");
+//     die("Koensi DB Gagal: ");
 // } else {
-//     echo ("Connection Success");
+//     echo ("Koensi DB Sukses");
 // }
 
 
@@ -51,6 +51,98 @@ function deleteData($id)
     return mysqli_affected_rows($conn);
 }
 
+//Fungsi Update
+function updateData($data)
+{
+    global $conn;
+
+    $id_paket = $data["id"];
+    $nama_paket = htmlspecialchars($data["nama_paket"]);
+    $deskripsi = htmlspecialchars($data["deskripsi"]);
+    $harga = htmlspecialchars($data["harga"]);
+    $durasi = htmlspecialchars($data["durasi"]);
+    $pcs = htmlspecialchars($data["pcs"]);
+    $gambar = isset($data["gambar"]) ? htmlspecialchars($data["gambar"]) : '';
+
+    $updateData = "UPDATE paket_wisata SET 
+        nama_paket ='$nama_paket',
+        deskripsi = '$deskripsi',
+        harga = '$harga',
+        durasi ='$durasi',
+        pcs='$pcs'";
+    
+    if ($gambar) {
+        $updateData .= ", gambar='$gambar'";
+    }
+
+    $updateData .= " WHERE id= '$id_paket'";
+
+    mysqli_query($conn, $updateData);
+    return mysqli_affected_rows($conn);
+}
+
+//Fungsi Ambil data by id
+function getDataById($conn) {
+    if (isset($_POST['edit_id'])) {
+        $id = $_POST['edit_id'];
+        // Ambil data berdasarkan id
+        $query = "SELECT * FROM paket_wisata WHERE id = $id";
+        $result = mysqli_query($conn, $query);
+        return mysqli_fetch_assoc($result);
+    }
+    return null;
+}
+
+function handleUpdateData($updateData, $file) {
+    global $conn;
+
+    $id_paket = $updateData["id"];
+    $nama_paket = htmlspecialchars($updateData["nama_paket"]);
+    $deskripsi = htmlspecialchars($updateData["deskripsi"]);
+    $harga = htmlspecialchars($updateData["harga"]);
+    $durasi = htmlspecialchars($updateData["durasi"]);
+    $pcs = htmlspecialchars($updateData["pcs"]);
+    $gambar = $updateData['existing_gambar'];
+
+    if (isset($file) && $file['error'] === UPLOAD_ERR_OK) {
+        $fileTmpPath = $file['tmp_name'];
+        $fileName = $file['name'];
+        $fileNameCmps = explode(".", $fileName);
+        $fileExtension = strtolower(end($fileNameCmps));
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+
+        if (in_array($fileExtension, $allowedExtensions)) {
+            $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+            $uploadFileDir = '../../asset/img/';
+            $dest_path = $uploadFileDir . $newFileName;
+
+            if (!is_dir($uploadFileDir)) {
+                mkdir($uploadFileDir, 0755, true);
+            }
+
+            if (move_uploaded_file($fileTmpPath, $dest_path)) {
+                $gambar = $newFileName;
+            } else {
+                return 'Gagal upload gambar';
+            }
+        } else {
+            return 'File gambar tidak sesuai';
+        }
+    }
+
+    $updateData['gambar'] = $gambar;
+    $updated = updateData($updateData);
+
+    if ($updated > 0) {
+        
+        return true;
+    } else {
+        return "Update Data Paket Gagal: " . mysqli_error($conn);
+    }
+}
+
+
+
 //Fungsi Tambah Data 
 function addData($id)
 {
@@ -64,7 +156,6 @@ function addData($id)
     if (!$gambar) {
         return false;
     }
-    //Tambahkan query untuk memasukkan data ke tbl
     $insert = "INSERT INTO paket_wisata VALUES ('','$nama_paket','$deskripsi','$harga','$durasi','$gambar','$pcs')";
 
     mysqli_query($conn, $insert);

@@ -12,6 +12,37 @@ if(isset($_POST['btnAddDataPaket'])){
 
 $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  if (isset($_POST['edit_id']) || isset($_POST['update'])) {
+      $data = getDataById($conn);
+
+      if (isset($_POST['update'])) {
+          $updateData = [
+              'id' => $_POST['id'],
+              'nama_paket' => $_POST['nama_paket'],
+              'deskripsi' => $_POST['deskripsi'],
+              'harga' => $_POST['harga'],
+              'durasi' => $_POST['durasi'],
+              'pcs' => $_POST['pcs'],
+              'existing_gambar' => $_POST['existing_gambar']
+          ];
+
+          $file = $_FILES['gambar'];
+
+          $result = handleUpdateData($updateData, $file);
+          if ($result === true) {
+              $_SESSION['updateSukses'] = true;
+              header("Location: index.php");
+              exit();
+          } else {
+              $_SESSION['updateGagal'] = $result;
+          }
+      }
+  }
+}
+
+
 ?>
 
 <!doctype html>
@@ -96,8 +127,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
               </tr>
             </thead>
             <tbody>
-              
-           <?php $no = 1;?> 
+            <?php $no = 1;?> 
             <?php foreach ($query as $getData) : ?>
               <tr >
                 <td><?php echo $no ?></td>
@@ -108,9 +138,12 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                 <td><?php echo $getData['pcs'] ?> Orang</td>
                 <td>
                   <div class="d-flex justify-content-start">
-                      <button class="btn btn-primary px-2 pt-0 pb-1" data-bs-toggle="modal" data-bs-target="#updatePaketWisata">
+                      <form method="post" action="">
+                          <input type="hidden" name="edit_id" value="<?php echo $getData['id']; ?>">
+                          <button class="btn btn-primary px-2 pt-0 pb-1" type="submit" data-id="<?php echo $getData['id']; ?>" data-bs-toggle="modal" data-bs-target="#updatePaketWisata">
                         <span data-feather="edit"></span>
                       </button>
+                      </form>
                     <div class="mx-1"></div>
                     <a href="../../delete.php?id= <?php echo $getData['id'] ?> ">
                       <button class="btn btn-danger px-2 pt-0 pb-1">
@@ -120,14 +153,17 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                   </div>
                 </td>
               </tr>
-              <?php $no++; ?>
-              <?php endforeach; ?>
+            <?php $no++; ?>
+            <?php endforeach; ?>
             </tbody>
           </table>
         </div>
       </main>
     </div>
   </div>
+
+  
+
 
   <!-- PopUp Form Tambah Paket Wisata -->
         <div class="modal fade" id="tambahPaketWisata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="tambahPaketWisataLabel" aria-hidden="true">
@@ -175,49 +211,53 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
         </div>
 
   <!-- PopUp Form Update Paket Wisata -->
-        <div class="modal fade" id="updatePaketWisata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updatePaketWisataLabel" aria-hidden="true">
-          <div class="modal-dialog ">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updatePaketWisataLabel">Form Update Paket Wisata</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <?php if (isset($data)) : ?>
+      <div class="modal fade show d-block" id="updatePaketWisata" tabindex="-1" aria-labelledby="updatePaketWisataLabel" aria-hidden="true">
+        <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="updatePaketWisataLabel">Form Update Paket Wisata</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="window.history.back();"></button>
+                  </div>
+                  <form method="post" action="" enctype="multipart/form-data">
+                      <div class="modal-body">
+                          <div class="mb-3">
+                              <label for="nama_paket" class="form-label">Nama Paket Wisata</label>
+                              <input type="text" class="form-control" id="nama_paket" name="nama_paket" value="<?php echo $data['nama_paket']; ?>">
+                          </div>
+                          <div class="mb-3">
+                              <label for="deskripsi" class="form-label">Deskripsi</label>
+                              <textarea class="form-control" id="deskripsi" name="deskripsi" rows="2"><?php echo $data['deskripsi']; ?></textarea>
+                          </div>
+                          <div class="mb-3">
+                              <label for="harga" class="form-label">Harga</label>
+                              <input type="number" class="form-control" id="harga" name="harga" value="<?php echo $data['harga']; ?>">
+                          </div>
+                          <div class="mb-3">
+                              <label for="durasi" class="form-label">Durasi</label>
+                              <input type="number" class="form-control" id="durasi" name="durasi" value="<?php echo $data['durasi']; ?>">
+                          </div>
+                          <div class="mb-3">
+                              <label for="pcs" class="form-label">Jumlah Orang</label>
+                              <input type="number" class="form-control" id="pcs" name="pcs" value="<?php echo $data['pcs']; ?>">
+                          </div>
+                          <div class="mb-3">
+                              <label for="gambar" class="form-label">Gambar Wisata</label>
+                              <input class="form-control" type="file" id="gambar" name="gambar">
+                              <input type="hidden" name="existing_gambar" value="<?php echo $data['gambar']; ?>">
+
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
+                          <button type="submit" name="update" class="btn btn-primary">Update</button>
+                      </div>
+                      <input type="hidden" name="id" value="<?php echo $data['id']; ?>">
+                  </form>
               </div>
-            <form>
-              <div class="modal-body ">
-                  <div class="mb-3">
-                    <label for="nama_paket" class="form-label">Nama Paket Wisata</label>
-                    <input type="text" class="form-control" id="nama_paket" name="nama_paket">
-                  </div>
-                  <div class="mb-3">
-                    <label for="deskripsi" class="form-label">Deskripsi</label>
-                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="2"></textarea>
-                  </div>
-                  <div class="mb-3">
-                    <label for="harga" class="form-label">Harga</label>
-                    <input type="number" class="form-control" id="harga" name="harga">
-                  </div>
-                  <div class="mb-3">
-                    <label for="durasi" class="form-label">Durasi</label>
-                    <input type="number" class="form-control" id="durasi" name="durasi">
-                  </div>
-                  <div class="mb-3">
-                    <label for="pcs" class="form-label">Jumlah Orang</label>
-                    <input type="number" class="form-control" id="pcs" name="pcs">
-                  </div>
-                  <div class="mb-3">
-                    <label for="gambar" class="form-label">Gambar Wisata</label>
-                    <input class="form-control" type="file" id="gambar" name="gambar">
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
-                  <button type="button" class="btn btn-primary">Update</button>
-                </div>
-              </div>
-            </form>
-            </div>
           </div>
-        </div>
+      </div>
+    <?php endif; ?>
 
   <!-- Notif Berhasil Tambah Data -->
         <?php if (isset($_SESSION['addDataSukses'])) : ?>
@@ -284,6 +324,17 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
       <?php endif; ?>
       
 
+
+<!-- Fungsi Untuk menampilkah modal -->
+      <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+          const updateModal = document.getElementById('updatePaketWisata');
+          updateModal.addEventListener('show.bs.modal', (event) => {
+            const button = event.relatedTarget;
+            const id = button.getAttribute('data-id');
+          });
+        });
+      </script>
 
 
 <!-- Fungsi Untuk menampilkah notif -->
