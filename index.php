@@ -3,7 +3,7 @@ session_start();
 require "function.php";
 
 if (isset($_POST['btnsignup'])) {
-    $signupResult = signup_acc($_POST);
+    $signupResult = daftarAccount($_POST);
     if ($signupResult > 0) {
         $_SESSION['signup_success'] = true; 
         header("Location: index.php");
@@ -72,7 +72,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                     </li>
                     <?php if (isset($_SESSION['email'])) : ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="paketWisata.php">Paket Wisata</a>
+                        <a class="nav-link" href="#">Pesanan</a>
                     </li>
                     <?php endif; ?>
 
@@ -141,7 +141,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                         pengalaman tak terlupakan. Singkat namun penuh makna, mari jelajahi pesona Indonesia bersama
                         kami.</p>
                     <p>
-                        <a href="#" class="btn btn-secondary my-2 poppins-regular">Pesan Sekarang</a>
+                        <a href="#paketWisata" class="btn btn-secondary my-2 poppins-regular">Pesan Sekarang</a>
                     </p>
                 </div>
                 <div class="col-lg-6 col-md-8 d-flex justify-content-center align-items-center">
@@ -155,36 +155,95 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
 
 
         <div class="album py-5 bg-light">
-            <div class="container">
+            <div class="container" id="paketWisata">
+                <h3 class="poppins-regular mb-4">Daftar Paket Wisata</h3>
+                <hr class="my-4">
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                    
                 <?php foreach ($query as $getData) : ?>
                     <div class="col">
                         <div class="card shadow-sm ">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-                                xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                                preserveAspectRatio="xMidYMid slice" focusable="false">
-                                <title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#55595c" />
-                                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                            </svg>
-
+                        <img src="asset/img/<?php echo $getData['gambar']; ?>" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="Gambar Wisata">
                             <div class="card-body">
                                 <p class="poppins-regular fst-italic"><?php echo $getData['nama_paket'] ?></p>
                                 <p class="card-text overflow-hidden " style="height: 50px;""><?php echo $getData['deskripsi'] ?> </p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalFormPesan">Pesan Wisata Ini</button>
+                                    
                                     <small class="text-muted">Rp.<?php echo $getData['harga']?> / <?php echo $getData['durasi']?> Hari</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
-
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Form Pesan Paket Wisata -->
+        <div class="modal fade" id="modalFormPesan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalFormPesanLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalFormPesanLabel">Form Pesan Paket Wisata</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                    <fieldset disabled>
+                        <div class="mb-3">
+                            <label for="nama_paket" class="form-label">Paket Wisata</label>
+                            <input type="text" id="nama_paket" name="nama_paket" class="form-control" placeholder="Wisata Pahawang">
+                        </div>
+                        <div class="mb-3">
+                            <label for="harga" class="form-label">Harga Paket</label>
+                            <input type="text" id="harga" name="harga" class="form-control" placeholder="1250.000">
+                        </div>
+                    </fieldset>
+
+                    <div class="mb-3">
+                        <label >Fasilitas</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="penginapan">
+                            <label class="form-check-label" for="penginapan" name="penginapan" value="Penginapan">
+                                Penginapan (+Rp. 1000.000)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="transportasi">
+                            <label class="form-check-label" for="transportasi" name="transportasi" value="Transportasi">
+                                Transportasi (+Rp. 1200.000)
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="makan">
+                            <label class="form-check-label" for="makan" name="makan" value="Makan">
+                                Makan (+Rp. 500.000)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tanggal_pemesanan" class="form-label">Tanggal Berangkat</label>
+                        <input type="date" class="form-control" id="tanggal_pemesanan" name="tanggal_pemesanan">
+                    </div>
+                    <div class="mb-3">
+                        <label for="jumlah_orang" class="form-label">Jumlah Orang</label>
+                        <input type="int" class="form-control" id="jumlah_orang" name="jumlah_orang">
+                    </div>
+                    <div class="mb-3">
+                        <label for="jumlah_hari" class="form-label">Jumlah Hari</label>
+                        <input type="int" class="form-control" id="jumlah_hari" name="jumlah_hari">
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
+                        <button type="submit" name="btnPesan" class="btn btn-primary">Pesan</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     <!-- PopUp Login -->
     <div class="modal fade" id="modalLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
@@ -198,11 +257,11 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="email" class="form-label">Alamat Email</label>
-                            <input type="email" class="form-control" id="email" name='email'>
+                            <input type="email" class="form-control" id="email" name='email' required>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name='password'>
+                            <input type="password" class="form-control" id="password" name='password' required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -226,15 +285,15 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
-                            <input type="text" class="form-control" id="name" name="name">
+                            <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class=" mb-3">
                             <label for="email" class="form-label">Alamat Email</label>
-                            <input type="email" class="form-control" id="email" name="email">
+                            <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class=" mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password">
+                            <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -282,7 +341,8 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-        <script>
+    <!-- Fungsi menampilkan notif -->
+    <script>
         var toastElList = [].slice.call(document.querySelectorAll('.toast'))
         var toastList = toastElList.map(function (toastEl) {
             return new bootstrap.Toast(toastEl, {

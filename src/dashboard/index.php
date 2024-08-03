@@ -2,6 +2,13 @@
 session_start();
 require "../../function.php";
 
+if(isset($_POST['btnAddDataPaket'])){
+  if(addData($_POST)>=0){
+    $_SESSION['addDataSukses'] = true; 
+  }else{
+     $_SESSION['addDataGagal'] = true; 
+   }
+}
 
 $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
 
@@ -9,7 +16,6 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
 
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -123,7 +129,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
     </div>
   </div>
 
-  <!-- PopUp Tambah Paket Wisata -->
+  <!-- PopUp Form Tambah Paket Wisata -->
         <div class="modal fade" id="tambahPaketWisata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="tambahPaketWisataLabel" aria-hidden="true">
           <div class="modal-dialog ">
             <div class="modal-content">
@@ -131,36 +137,36 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                 <h1 class="modal-title fs-5" id="tambahPaketWisataLabel">Form Tambah Paket Wisata</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-            <form>
+            <form action="" method="post" enctype="multipart/form-data">
               <div class="modal-body ">
                   <div class="mb-3">
                     <label for="nama_paket" class="form-label">Nama Paket Wisata</label>
-                    <input type="text" class="form-control" id="nama_paket" name="nama_paket">
+                    <input type="text" class="form-control" id="nama_paket" name="nama_paket" required>
                   </div>
                   <div class="mb-3">
                     <label for="deskripsi" class="form-label">Deskripsi</label>
-                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="2"></textarea>
+                    <textarea class="form-control" id="deskripsi" name="deskripsi" rows="2" required></textarea>
                   </div>
                   <div class="mb-3">
                     <label for="harga" class="form-label">Harga</label>
-                    <input type="number" class="form-control" id="harga" name="harga">
+                    <input type="number" class="form-control" id="harga" name="harga" required>
                   </div>
                   <div class="mb-3">
                     <label for="durasi" class="form-label">Durasi</label>
-                    <input type="number" class="form-control" id="durasi" name="durasi">
+                    <input type="number" class="form-control" id="durasi" name="durasi" required>
                   </div>
                   <div class="mb-3">
                     <label for="pcs" class="form-label">Jumlah Orang</label>
-                    <input type="number" class="form-control" id="pcs" name="pcs">
+                    <input type="number" class="form-control" id="pcs" name="pcs" required>
                   </div>
                   <div class="mb-3">
                     <label for="gambar" class="form-label">Gambar Wisata</label>
-                    <input class="form-control" type="file" id="gambar" name="gambar">
+                    <input class="form-control" type="file" id="gambar" name="gambar" required>
                   </div>
                 </div>
                 <div class="modal-footer">
                   <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
-                  <button type="button" class="btn btn-primary">Tambah</button>
+                  <button type="submit" class="btn btn-primary" name="btnAddDataPaket">Tambah</button>
                 </div>
               </div>
             </form>
@@ -168,7 +174,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
           </div>
         </div>
 
- <!-- PopUp Update Paket Wisata -->
+  <!-- PopUp Form Update Paket Wisata -->
         <div class="modal fade" id="updatePaketWisata" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updatePaketWisataLabel" aria-hidden="true">
           <div class="modal-dialog ">
             <div class="modal-content">
@@ -213,6 +219,82 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
           </div>
         </div>
 
+  <!-- Notif Berhasil Tambah Data -->
+        <?php if (isset($_SESSION['addDataSukses'])) : ?>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body poppins-regular">
+                        Berhasil Tambah Data
+                    </div>
+                </div>
+            </div>
+          <?php unset($_SESSION['addDataSukses']); ?>
+        <?php endif; ?>
+
+  <!-- Notif Gagal Tambah Data -->
+        <?php if (isset($_SESSION['addDataGagal'])) : ?>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body poppins-regular">
+                        Gagal Tambah Data
+                    </div>
+                </div>
+            </div>
+          <?php unset($_SESSION['addDataGagal']); ?>
+        <?php endif; ?>
+
+  <!-- Notif Berhasil Hapus Data -->
+        <?php if (isset($_SESSION['deleteDataSukses'])) : ?>
+          <div class="toast-container position-fixed bottom-0 end-0 p-3">
+              <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                  <div class="toast-header">
+                      <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                  <div class="toast-body poppins-regular">
+                      Berhasil Hapus Data
+                  </div>
+              </div>
+          </div>
+        <?php unset($_SESSION['deleteDataSukses']); ?>
+      <?php endif; ?>
+
+    <!-- Notif Gagal Hapus Data -->
+        <?php if (isset($_SESSION['deleteDataGagal'])) : ?>
+          <div class="toast-container position-fixed bottom-0 end-0 p-3">
+              <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                  <div class="toast-header">
+                      <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                  </div>
+                  <div class="toast-body poppins-regular">
+                      Gagal Hapus Data
+                  </div>
+              </div>
+          </div>
+        <?php unset($_SESSION['deleteDataGagal']); ?>
+      <?php endif; ?>
+      
+
+
+
+<!-- Fungsi Untuk menampilkah notif -->
+    <script>
+        var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        var toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, {
+                autohide: false
+            }).show()
+        })
+    </script>
 
   <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
