@@ -42,11 +42,20 @@ function getData($query)
     return $array;
 }
 
+
 // Fungsi Hapus Data
 function deleteData($id)
 {
     global $conn;
     mysqli_query($conn, "DELETE FROM paket_wisata WHERE id = '$id'");
+
+    return mysqli_affected_rows($conn);
+}
+
+function deleteDataPemesanan($id)
+{
+    global $conn;
+    mysqli_query($conn, "DELETE FROM pemesanan WHERE id_pemesanan = '$id'");
 
     return mysqli_affected_rows($conn);
 }

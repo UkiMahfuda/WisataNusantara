@@ -9,10 +9,9 @@ if (isset($_POST['btnsignup'])) {
         header("Location: index.php");
         exit;
     } else {
-        echo "<script>alert('Gagal Buat Account: " . mysqli_error($conn) . "')</script>";
+        echo "<script>alert('Akun Sudah Ada " . mysqli_error($conn) . "')</script>";
     }
 }
-
 if (isset($_POST['btnlogin'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -22,7 +21,7 @@ if (isset($_POST['btnlogin'])) {
         if (password_verify($password, $user['password'])) {
             $_SESSION['btnlogin'] = true;
             $_SESSION['email'] = $email;
-            $_SESSION['admin'] = $user['admin'];  
+            $_SESSION['admin'] = $user['admin']; 
             header("Location: index.php");
             exit;
         } else {
@@ -34,6 +33,7 @@ if (isset($_POST['btnlogin'])) {
 }
 
 $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
+
 ?>
 
 <!DOCTYPE html>
@@ -68,11 +68,11 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
             <div class="collapse navbar-collapse px-0 px-lg-5 poppins-regular" id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.php">Home</a>
+                        <a class="nav-link active" href="#">Home</a>
                     </li>
                     <?php if (isset($_SESSION['email'])) : ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Pesanan</a>
+                        <a class="nav-link" href="pesanan.php">Pesanan</a>
                     </li>
                     <?php endif; ?>
 

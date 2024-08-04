@@ -2,8 +2,11 @@
 session_start();
 require "../../function.php";
 
+$query = getData("SELECT pemesanan.id_pemesanan, users.name, paket_wisata.nama_paket, paket_wisata.harga, 
+pemesanan.tanggal_pemesanan, pemesanan.jumlah_orang, pemesanan.jumlah_hari, pemesanan.total_harga 
+FROM pemesanan INNER JOIN users ON pemesanan.id_user = users.id INNER JOIN paket_wisata 
+ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan LIMIT 100");
 
-$query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
 
 ?>
 
@@ -70,48 +73,55 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
       </nav>
 
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <h2>Pesanan Wisata Customers</h2>
+        <h2 class="mb-4">Pesanan Wisata Customers</h2>
 
         <div class="table-responsive">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th scope="col">No</th>
-                <th scope="col">Nama Pemesan</th>
-                <th scope="col">Nama Paket</th>
-                <th scope="col">Tgl Pesan</th>
-                <th scope="col">Durasi</th>
-                <th scope="col">Jumlah Orang</th>
-                <th scope="col">Total Harga</th>
-                <th scope="col">Option</th>
-              </tr>
-            </thead>
-            <tbody>
-              
-              <tr >
-                <td></td>
-                <td></td>
-                <td></td>                
-                <td></td>
-                <td></td>                
-                <td></td>
-                <td></td>
-                <td>
-                  <div class="d-flex justify-content-start">
-                      <button class="btn btn-primary px-2 pt-0 pb-1" data-bs-toggle="modal" data-bs-target="#updatePaketWisata">
-                        <span data-feather="edit"></span>
-                      </button>
-                    <div class="mx-1"></div>
-                    <a href="../../delete.php?id= <?php echo $getData['id'] ?> ">
-                      <button class="btn btn-danger px-2 pt-0 pb-1">
-                        <span data-feather="delete"></span>
-                      </button>  
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <table class="table table-striped table-sm border border-secondary-subtlek">
+                <thead>
+                <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Nama Pemesan</th>
+                    <th scope="col">Paket Wisata</th>
+                    <th scope="col">Harga Paket</th>
+                    <th scope="col">Tgl Keberangkatan</th>
+                    <th scope="col">Jumlah Orang</th>
+                    <th scope="col">Hari</th>
+                    <th scope="col">Total Tagihan</th>
+                    <th scope="col">Option</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php $no = 1;?> 
+                <?php if (!empty($query)) :?>
+                    <?php foreach ($query as $getData) : ?>
+                    <tr >
+                        <td><?php echo $no ?></td>
+                        <td><?php echo $getData['name'] ?></td>
+                        <td><?php echo $getData['nama_paket'] ?></td>
+                        <td>Rp.<?php echo $getData['harga'] ?></td>                
+                        <td><?php echo $getData['tanggal_pemesanan'] ?></td>
+                        <td><?php echo $getData['jumlah_orang'] ?> Orang</td>
+                        <td><?php echo $getData['jumlah_hari'] ?> Hari</td>
+                        <td>Rp.<?php echo $getData['total_harga'] ?></td>
+                        <td>
+                        <a href="../../deletePesanan.php?id_pemesanan= <?php echo $getData['id_pemesanan'] ?> ">
+                          <button class="btn btn-danger px-2 pt-0 pb-1">
+                            <span data-feather="delete"></span>
+                            Hapus
+                          </button>  
+                            </a>
+                        </td>
+                    </tr>
+                    <?php $no++; ?>
+                    <?php endforeach; ?>
+                
+                <?php else :?>
+                    <tr>
+                        <td colspan="9" class="text-center">Belum ada pesanan</td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+            </table>
         </div>
       </main>
     </div>
@@ -161,6 +171,38 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
             </div>
           </div>
         </div>
+
+    <!-- Notif Berhasil Hapus Pesanan -->
+    <?php if (isset($_SESSION['deleteDataSukses'])) : ?>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+            <div class="toast-header">
+                <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body poppins-regular">
+                Pesanan Berhasil Di Hapus
+            </div>
+        </div>
+    </div>
+    <?php unset($_SESSION['deleteDataSukses']); ?>
+    <?php endif; ?>
+
+    <!-- Notif Gagal Hapus Pesanan -->
+    <?php if (isset($_SESSION['deleteDataGagal'])) : ?>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+            <div class="toast-header">
+                <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body poppins-regular">
+                Pesanan Gagal Di Hapus
+            </div>
+        </div>
+    </div>
+    <?php unset($_SESSION['deleteDataGagal']); ?>
+    <?php endif; ?>
 
 
   <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
