@@ -153,7 +153,6 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
             </div>
         </section>
 
-
         <div class="album py-5 bg-light">
             <div class="container" id="paketWisata">
                 <h3 class="poppins-regular mb-4">Daftar Paket Wisata</h3>
@@ -167,7 +166,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                                 <p class="poppins-regular fst-italic"><?php echo $getData['nama_paket'] ?></p>
                                 <p class="card-text overflow-hidden " style="height: 50px;""><?php echo $getData['deskripsi'] ?> </p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalFormPesan">Pesan Wisata Ini</button>
+                                    <a href="formPesanan.php" class="btn btn-sm btn-outline-primary">Pesan Wisata Ini</a>
                                     
                                     <small class="text-muted">Rp.<?php echo $getData['harga']?> / <?php echo $getData['durasi']?> Hari</small>
                                 </div>
@@ -180,70 +179,7 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
         </div>
     </main>
 
-    <!-- Form Pesan Paket Wisata -->
-        <!-- <div class="modal fade" id="modalFormPesan" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalFormPesanLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalFormPesanLabel">Form Pesan Paket Wisata</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                    <fieldset disabled>
-                        <div class="mb-3">
-                            <label for="nama_paket" class="form-label">Paket Wisata</label>
-                            <input type="text" id="nama_paket" name="nama_paket" class="form-control" placeholder="Wisata Pahawang">
-                        </div>
-                        <div class="mb-3">
-                            <label for="harga" class="form-label">Harga Paket</label>
-                            <input type="text" id="harga" name="harga" class="form-control" placeholder="1250.000">
-                        </div>
-                    </fieldset>
-
-                    <div class="mb-3">
-                        <label >Fasilitas</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="penginapan">
-                            <label class="form-check-label" for="penginapan" name="penginapan" value="Penginapan">
-                                Penginapan (+Rp. 1000.000)
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="transportasi">
-                            <label class="form-check-label" for="transportasi" name="transportasi" value="Transportasi">
-                                Transportasi (+Rp. 1200.000)
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="makan">
-                            <label class="form-check-label" for="makan" name="makan" value="Makan">
-                                Makan (+Rp. 500.000)
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="tanggal_pemesanan" class="form-label">Tanggal Berangkat</label>
-                        <input type="date" class="form-control" id="tanggal_pemesanan" name="tanggal_pemesanan">
-                    </div>
-                    <div class="mb-3">
-                        <label for="jumlah_orang" class="form-label">Jumlah Orang</label>
-                        <input type="int" class="form-control" id="jumlah_orang" name="jumlah_orang">
-                    </div>
-                    <div class="mb-3">
-                        <label for="jumlah_hari" class="form-label">Jumlah Hari</label>
-                        <input type="int" class="form-control" id="jumlah_hari" name="jumlah_hari">
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-secondary" data-bs-dismiss="modal">Reset</button>
-                        <button type="submit" name="btnPesan" class="btn btn-primary">Pesan</button>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
+  
 
     <!-- PopUp Login -->
     <div class="modal fade" id="modalLogin" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLoginLabel" aria-hidden="true">
