@@ -21,6 +21,8 @@ if (isset($_POST['btnlogin'])) {
         if (password_verify($password, $user['password'])) {
             $_SESSION['btnlogin'] = true;
             $_SESSION['email'] = $email;
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['id'] = $user['id'];
             $_SESSION['admin'] = $user['admin']; 
             header("Location: index.php");
             exit;
@@ -165,10 +167,12 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
                             <div class="card-body">
                                 <p class="poppins-regular fst-italic"><?php echo $getData['nama_paket'] ?></p>
                                 <p class="card-text overflow-hidden " style="height: 50px;""><?php echo $getData['deskripsi'] ?> </p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <a href="formPesanan.php" class="btn btn-sm btn-outline-primary">Pesan Wisata Ini</a>
-                                    
-                                    <small class="text-muted">Rp.<?php echo $getData['harga']?> / <?php echo $getData['durasi']?> Hari</small>
+                                <div class="d-flex justify-content-between align-items-center">                                    
+                                    <a href="<?php echo isset($_SESSION['email']) ? 'formPesanan.php' : '#'; ?>" class="btn btn-sm btn-outline-primary"
+                                    onclick="if (!<?php echo isset($_SESSION['email']) ? 'true' : 'false'; ?>) { alert('Silahkan login terlebih dahulu'); }">
+                                        Pesan Wisata Sekarang
+                                    </a>
+                                    <small class="text-muted">Rp.<?php echo number_format($getData['harga'],0,",",".")?> / <?php echo $getData['durasi']?> Hari</small>
                                 </div>
                             </div>
                         </div>

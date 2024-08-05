@@ -5,7 +5,7 @@ require "function.php";
 $query = getData("SELECT pemesanan.id_pemesanan, users.name, paket_wisata.nama_paket, paket_wisata.harga, 
 pemesanan.tanggal_pemesanan, pemesanan.jumlah_orang, pemesanan.jumlah_hari, pemesanan.total_harga 
 FROM pemesanan INNER JOIN users ON pemesanan.id_user = users.id INNER JOIN paket_wisata 
-ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan LIMIT 100");
+ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan DESC LIMIT 100");
 
 ?>
 
@@ -117,11 +117,11 @@ ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan LIMIT 100");
                         <td><?php echo $no ?></td>
                         <td><?php echo $getData['name'] ?></td>
                         <td><?php echo $getData['nama_paket'] ?></td>
-                        <td>Rp.<?php echo $getData['harga'] ?></td>                
+                        <td>Rp.<?php echo number_format($getData['harga'],0,",",".") ?></td>                
                         <td><?php echo $getData['tanggal_pemesanan'] ?></td>
                         <td><?php echo $getData['jumlah_orang'] ?> Orang</td>
                         <td><?php echo $getData['jumlah_hari'] ?> Hari</td>
-                        <td>Rp.<?php echo $getData['total_harga'] ?></td>
+                        <td>Rp.<?php echo number_format($getData['total_harga'],0,",",".") ?></td>
                         <td>
                         <a href="deletePesanan.php?id_pemesanan= <?php echo $getData['id_pemesanan'] ?> ">
                             <button class="btn btn-danger px-2 pt-1">

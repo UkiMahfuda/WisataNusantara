@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <td><?php echo $no ?></td>
                 <td><?php echo $getData['nama_paket'] ?></td>
                 <td class="text-truncate" style="max-width: 200px;"><?php echo $getData['deskripsi'] ?></td>
-                <td>Rp.<?php echo $getData['harga'] ?></td>                
+                <td>Rp.<?php echo number_format($getData['harga'],0,",",".") ?></td>                
                 <td><?php echo $getData['durasi'] ?> Hari</td>
                 <td><?php echo $getData['pcs'] ?> Orang</td>
                 <td>

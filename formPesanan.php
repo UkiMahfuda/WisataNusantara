@@ -4,7 +4,20 @@ require "function.php";
 
 $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
 
+if(isset($_POST['submitForm'])){
+    if(addDataPemesanan($_POST) > 0){
+        $_SESSION['addDataSukses'] = true; 
+    } else {
+        $_SESSION['addDataGagal'] = true; 
+    }
+}
+
+$name = $_SESSION['name'];
+$id_user = $_SESSION['id'];
+// var_dump($id_user);
+// var_dump($name);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,9 +36,6 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
     <link rel="stylesheet" href="./asset/css/style.css">
     <title>Pariwisata Nusantara</title>
 </head>
-<style>
-
-</style>
 
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
@@ -90,88 +100,135 @@ $query = getData("SELECT * FROM paket_wisata ORDER BY id DESC");
     <div class="container d-flex justify-content-center">
         <div class="col-md-7 col-lg-8 border border-secondary-subtlek p-4 my-5">
             <h4 class="mb-3">Form Pemesanan Paket Wisata</h4>
-            <form class="needs-validation" novalidate>
-            <div class="row g-3">
-                <div class="col-sm-6">
-                <label for="name" class="form-label">Nama Pemesan</label>
-                <input type="text" class="form-control" id="name" name="name" required>
+            <form class="needs-validation" action="" method="post">
+                <div class="row g-3">
+                    <input type="hidden" name="id_user" value="<?php echo htmlspecialchars($id_user); ?>" readonly>
+                    <fieldset class="col-sm-6" disabled>
+                        <label for="name" class="form-label">Nama Pemesan</label>
+                        <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>">
+                    </fieldset>
+                    <div class="col-sm-6">
+                        <label for="paket_wisata" class="form-label">Pilih Paket Wisata</label>
+                        <select class="form-select" id="paket_wisata" name="paket_wisata" required>
+                            <option value="" data-harga="0">Pilih Paket Wisata</option>
+                            <?php foreach ($query as $getData) : ?>
+                                <option value="<?php echo $getData['id']?>" data-harga="<?php echo $getData['harga']?>">
+                                    <?php echo $getData['nama_paket']?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <table>
+                        <tr>
+                            <td>Pilihan Fasilitas</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input fasilitas" type="checkbox" value="1200000" id="transportasi" name="fasilitas[]">
+                                    <label class="form-check-label" for="transportasi">Transportasi +Rp.1.200.000</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input fasilitas" type="checkbox" value="500000" id="makan" name="fasilitas[]">
+                                    <label class="form-check-label" for="makan">Makan +Rp.500.000</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input fasilitas" type="checkbox" value="1000000" id="penginapan" name="fasilitas[]">
+                                    <label class="form-check-label" for="penginapan">Penginapan +Rp.1.000.000</label>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="col-12">
+                        <label for="tanggal_pemesanan" class="form-label">Tgl Keberangkatan</label>
+                        <input type="date" class="form-control" id="tanggal_pemesanan" name="tanggal_pemesanan" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="jumlah_orang" class="form-label">Jumlah Orang</label>
+                        <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="jumlah_hari" class="form-label">Jumlah Hari</label>
+                        <input type="number" class="form-control" id="jumlah_hari" name="jumlah_hari" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="total_harga" class="form-label">Total Tagihan</label>
+                        <input type="number" class="form-control" id="total_harga" name="total_harga" readonly>
+                    </div>
+                    <hr class="my-4">
+                    <button class="w-100 btn btn-primary btn-lg" name="submitForm" type="submit">Submit Pesanan</button>
                 </div>
-
-                <div class="col-sm-6">
-                    <label for="paket_wisat" class="form-label">Pilih Paket Wisata</label>
-                    <select class="form-select" id="paket_wisat" name="paket_wisata" required>
-                        <option >Choose...</option>
-                        <option value="1000000">Wisata Candi Borobudur</option>
-                        <option value="1000000">Wisata Candi Borobudur</option>
-                    </select>
-                </div>
-
-                <table>
-                    <tr>
-                        <td>
-                            Pilihan Fasilitas
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="transportasi">
-                                <label class="form-check-label" for="transportasi">
-                                    Transportasi
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="makan">
-                                <label class="form-check-label" for="makan">
-                                    Makan
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="penginapan">
-                                <label class="form-check-label" for="penginapan">
-                                    Penginapan
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="col-12">
-                <label for="tanggal_pemesanan" class="form-label">Tgl Keberangkatan</label>
-                <input type="date" class="form-control" id="tanggal_pemesanan" name="tanggal_pemesanan" required>
-                </div>
-
-                <div class="col-12">
-                <label for="jumlah_orang" class="form-label">Jumlah Orang</label>
-                <input type="number" class="form-control" id="jumlah_orang" name="jumlah_orang" required>
-                </div>
-
-                <div class="col-12">
-                <label for="jumlah_hari" class="form-label">Jumlah Hari</label>
-                <input type="number" class="form-control" id="jumlah_hari" name="jumlah_hari" required>
-                </div>
-
-                <fieldset disabled>
-                <div class="col-12">
-                <label for="total_harga" class="form-label">Total Tagihan</label>
-                <input type="number" class="form-control" id="total_harga" name="total_harga" value="1000000" required>
-                </div>
-                </fieldset>
-
-            <hr class="my-4">
-
-            <button class="w-100 btn btn-primary btn-lg" type="submit">Submit Pesanan</button>
             </form>
+
         </div>
     </div>
+
+
+      <!-- Notif Berhasil Input Pesanan -->
+        <?php if (isset($_SESSION['addDataSukses'])) : ?>
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+                    <div class="toast-header">
+                        <strong class="me-auto poppins-semibold">Pariwisata Nusantara</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body poppins-regular">
+                    Berhasil Pesan Paket Wisata <br><hr>
+                    Lihat Di Menu Pesanan Untuk Melihat History Pesanan
+                </div>
+            </div>
+            <?php unset($_SESSION['addDataSukses']); ?>
+        <?php endif; ?>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        //Panggil id setiap form input
+        const paketWisata = document.getElementById('paket_wisata');
+        const fasilitas = document.querySelectorAll('.fasilitas');
+        const jumlahOrang = document.getElementById('jumlah_orang');
+        const jumlahHari = document.getElementById('jumlah_hari');
+        const totalHarga = document.getElementById('total_harga');
+
+        function totalTagihan() {
+            let total = 0;
+
+            // Ambil data harga yang telah di pilih
+            const pilihPaket = paketWisata.options[paketWisata.selectedIndex];
+            const paketHarga = parseInt(pilihPaket.getAttribute('data-harga') || 0);
+
+            // Ambil Fasilitas yang dipilih
+            let fasilitasTotal = 0;
+            fasilitas.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    fasilitasTotal += parseInt(checkbox.value);
+                }
+            });
+
+            // Hasil Perhitungan
+            const orang = parseInt(jumlahOrang.value || 0);
+            const hari = parseInt(jumlahHari.value || 0);
+            total = (paketHarga + fasilitasTotal) * orang * hari;
+
+            totalHarga.value = total;
+        }
+
+        paketWisata.addEventListener('change', totalTagihan);
+        fasilitas.forEach(function (checkbox) {
+            checkbox.addEventListener('change', totalTagihan);
+        });
+        jumlahOrang.addEventListener('input', totalTagihan);
+        jumlahHari.addEventListener('input', totalTagihan);
+    });
+</script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

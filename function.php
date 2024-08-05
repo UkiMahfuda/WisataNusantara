@@ -13,7 +13,7 @@ function daftarAccount($dataUsers)
 {
     global $conn;
 
-    $name = strtolower(stripslashes($dataUsers["name"]));
+    $name = $dataUsers["name"];
     $email = mysqli_real_escape_string($conn, $dataUsers["email"]);
     $password = mysqli_real_escape_string($conn, $dataUsers["password"]);
 
@@ -152,7 +152,7 @@ function handleUpdateData($updateData, $file) {
 
 
 
-//Fungsi Tambah Data 
+//Fungsi Tambah Data Paket Wisata
 function addData($id)
 {
     global $conn;
@@ -170,6 +170,28 @@ function addData($id)
     mysqli_query($conn, $insert);
     return mysqli_affected_rows($conn);
 }
+
+//Fungsi Tambah Data Pemesanan
+function addDataPemesanan($data)
+{
+    global $conn;
+    $id_user = htmlspecialchars($data["id_user"]);
+    $id_paket = htmlspecialchars($data["paket_wisata"]);
+    $tanggal_pemesanan = htmlspecialchars($data["tanggal_pemesanan"]);
+    $jumlah_orang = htmlspecialchars($data["jumlah_orang"]);
+    $total_harga = htmlspecialchars($data["total_harga"]);
+    $jumlah_hari = htmlspecialchars($data["jumlah_hari"]);
+    $transportasi = isset($data["transportasi"]) ? 1 : 0;
+    $penginapan = isset($data["penginapan"]) ? 1 : 0;
+    $makan = isset($data["makan"]) ? 1 : 0;
+
+    $insert = "INSERT INTO pemesanan (id_user, id_paket, tanggal_pemesanan, jumlah_orang, total_harga, jumlah_hari, transportasi, makan, penginapan) 
+    VALUES ('$id_user','$id_paket','$tanggal_pemesanan','$jumlah_orang','$total_harga','$jumlah_hari','$transportasi','$makan','$penginapan')";
+
+    mysqli_query($conn, $insert);
+    return mysqli_affected_rows($conn);
+}
+
 
 function uploadGambar()
 {
