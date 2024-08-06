@@ -121,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <th scope="col">Deskripsi</th>
                 <th scope="col">Harga</th>
                 <th scope="col">Durasi</th>
-                <th scope="col">Pcs</th>
                 <th scope="col">Option</th>
               </tr>
             </thead>
@@ -134,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <td class="text-truncate" style="max-width: 200px;"><?php echo $getData['deskripsi'] ?></td>
                 <td>Rp.<?php echo number_format($getData['harga'],0,",",".") ?></td>                
                 <td><?php echo $getData['durasi'] ?> Hari</td>
-                <td><?php echo $getData['pcs'] ?> Orang</td>
                 <td>
                   <div class="d-flex justify-content-start">
                       <form method="post" action="">
@@ -188,10 +186,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <input type="number" class="form-control" id="durasi" name="durasi" required>
                   </div>
                   <div class="mb-3">
-                    <label for="pcs" class="form-label">Jumlah Orang</label>
-                    <input type="number" class="form-control" id="pcs" name="pcs" required>
-                  </div>
-                  <div class="mb-3">
                     <label for="gambar" class="form-label">Gambar Wisata</label>
                     <input class="form-control" type="file" id="gambar" name="gambar" required>
                   </div>
@@ -232,10 +226,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                           <div class="mb-3">
                               <label for="durasi" class="form-label">Durasi</label>
                               <input type="number" class="form-control" id="durasi" name="durasi" value="<?php echo $data['durasi']; ?>">
-                          </div>
-                          <div class="mb-3">
-                              <label for="pcs" class="form-label">Jumlah Orang</label>
-                              <input type="number" class="form-control" id="pcs" name="pcs" value="<?php echo $data['pcs']; ?>">
                           </div>
                           <div class="mb-3">
                               <label for="gambar" class="form-label">Gambar Wisata</label>

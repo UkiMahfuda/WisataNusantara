@@ -125,24 +125,27 @@ $id_user = $_SESSION['id'];
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input fasilitas" type="checkbox" value="1200000" id="transportasi" name="fasilitas[]">
+                                    <input class="form-check-input fasilitas" type="checkbox" value="1200000" id="transportasi" name="fasilitas[]" data-hidden-id="hidden_transportasi">
                                     <label class="form-check-label" for="transportasi">Transportasi +Rp.1.200.000</label>
+                                    <input type="hidden" id="hidden_transportasi" name="fasilitas_transportasi" value="0">
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input fasilitas" type="checkbox" value="500000" id="makan" name="fasilitas[]">
+                                    <input class="form-check-input fasilitas" type="checkbox" value="500000" id="makan" name="fasilitas[]" data-hidden-id="hidden_makan">
                                     <label class="form-check-label" for="makan">Makan +Rp.500.000</label>
+                                    <input type="hidden" id="hidden_makan" name="fasilitas_makan" value="0">
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input class="form-check-input fasilitas" type="checkbox" value="1000000" id="penginapan" name="fasilitas[]">
+                                    <input class="form-check-input fasilitas" type="checkbox" value="1000000" id="penginapan" name="fasilitas[]" data-hidden-id="hidden_penginapan">
                                     <label class="form-check-label" for="penginapan">Penginapan +Rp.1.000.000</label>
+                                    <input type="hidden" id="hidden_penginapan" name="fasilitas_penginapan" value="0">
                                 </div>
                             </td>
                         </tr>
@@ -190,44 +193,49 @@ $id_user = $_SESSION['id'];
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        //Panggil id setiap form input
-        const paketWisata = document.getElementById('paket_wisata');
-        const fasilitas = document.querySelectorAll('.fasilitas');
-        const jumlahOrang = document.getElementById('jumlah_orang');
-        const jumlahHari = document.getElementById('jumlah_hari');
-        const totalHarga = document.getElementById('total_harga');
+        document.addEventListener('DOMContentLoaded', function () {
+            //Panggil id setiap form input
+            const paketWisata = document.getElementById('paket_wisata');
+            const fasilitas = document.querySelectorAll('.fasilitas');
+            const jumlahOrang = document.getElementById('jumlah_orang');
+            const jumlahHari = document.getElementById('jumlah_hari');
+            const totalHarga = document.getElementById('total_harga');
 
-        function totalTagihan() {
-            let total = 0;
+            function totalTagihan() {
+                let total = 0;
 
-            // Ambil data harga yang telah di pilih
-            const pilihPaket = paketWisata.options[paketWisata.selectedIndex];
-            const paketHarga = parseInt(pilihPaket.getAttribute('data-harga') || 0);
+                // Ambil data harga yang telah di pilih
+                const pilihPaket = paketWisata.options[paketWisata.selectedIndex];
+                const paketHarga = parseInt(pilihPaket.getAttribute('data-harga') || 0);
 
-            // Ambil Fasilitas yang dipilih
-            let fasilitasTotal = 0;
+                // Ambil Fasilitas yang dipilih
+                let fasilitasTotal = 0;
+                fasilitas.forEach(function (checkbox) {
+                    const hiddenInput = document.getElementById(checkbox.getAttribute('data-hidden-id'));
+                    if (checkbox.checked) {
+                        fasilitasTotal += parseInt(checkbox.value);
+                        hiddenInput.value = 1;
+                    } else {
+                        hiddenInput.value = 0;
+                    }
+                });
+
+                // Hasil Perhitungan
+                const orang = parseInt(jumlahOrang.value || 0);
+                const hari = parseInt(jumlahHari.value || 0);
+                total = (paketHarga + fasilitasTotal) * orang * hari;
+
+                totalHarga.value = total;
+            }
+
+            paketWisata.addEventListener('change', totalTagihan);
             fasilitas.forEach(function (checkbox) {
-                if (checkbox.checked) {
-                    fasilitasTotal += parseInt(checkbox.value);
-                }
+                checkbox.addEventListener('change', totalTagihan);
             });
-
-            // Hasil Perhitungan
-            const orang = parseInt(jumlahOrang.value || 0);
-            const hari = parseInt(jumlahHari.value || 0);
-            total = (paketHarga + fasilitasTotal) * orang * hari;
-
-            totalHarga.value = total;
-        }
-
-        paketWisata.addEventListener('change', totalTagihan);
-        fasilitas.forEach(function (checkbox) {
-            checkbox.addEventListener('change', totalTagihan);
+            jumlahOrang.addEventListener('input', totalTagihan);
+            jumlahHari.addEventListener('input', totalTagihan);
         });
-        jumlahOrang.addEventListener('input', totalTagihan);
-        jumlahHari.addEventListener('input', totalTagihan);
-    });
+
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

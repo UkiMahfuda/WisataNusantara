@@ -70,15 +70,13 @@ function updateData($data)
     $deskripsi = htmlspecialchars($data["deskripsi"]);
     $harga = htmlspecialchars($data["harga"]);
     $durasi = htmlspecialchars($data["durasi"]);
-    $pcs = htmlspecialchars($data["pcs"]);
     $gambar = isset($data["gambar"]) ? htmlspecialchars($data["gambar"]) : '';
 
     $updateData = "UPDATE paket_wisata SET 
         nama_paket ='$nama_paket',
         deskripsi = '$deskripsi',
         harga = '$harga',
-        durasi ='$durasi',
-        pcs='$pcs'";
+        durasi ='$durasi'";
     
     if ($gambar) {
         $updateData .= ", gambar='$gambar'";
@@ -110,7 +108,6 @@ function handleUpdateData($updateData, $file) {
     $deskripsi = htmlspecialchars($updateData["deskripsi"]);
     $harga = htmlspecialchars($updateData["harga"]);
     $durasi = htmlspecialchars($updateData["durasi"]);
-    $pcs = htmlspecialchars($updateData["pcs"]);
     $gambar = $updateData['existing_gambar'];
 
     if (isset($file) && $file['error'] === UPLOAD_ERR_OK) {
@@ -160,12 +157,11 @@ function addData($id)
     $deskripsi = htmlspecialchars($id["deskripsi"]);
     $harga = htmlspecialchars($id["harga"]);
     $durasi = htmlspecialchars($id["durasi"]);
-    $pcs = htmlspecialchars($id["pcs"]);
     $gambar = uploadGambar();
     if (!$gambar) {
         return false;
     }
-    $insert = "INSERT INTO paket_wisata VALUES ('','$nama_paket','$deskripsi','$harga','$durasi','$gambar','$pcs')";
+    $insert = "INSERT INTO paket_wisata VALUES ('','$nama_paket','$deskripsi','$harga','$durasi','$gambar')";
 
     mysqli_query($conn, $insert);
     return mysqli_affected_rows($conn);
@@ -181,9 +177,9 @@ function addDataPemesanan($data)
     $jumlah_orang = htmlspecialchars($data["jumlah_orang"]);
     $total_harga = htmlspecialchars($data["total_harga"]);
     $jumlah_hari = htmlspecialchars($data["jumlah_hari"]);
-    $transportasi = isset($data["transportasi"]) ? 1 : 0;
-    $penginapan = isset($data["penginapan"]) ? 1 : 0;
-    $makan = isset($data["makan"]) ? 1 : 0;
+    $transportasi = isset($data["fasilitas_transportasi"]) ? $data["fasilitas_transportasi"] : 0;
+    $penginapan = isset($data["fasilitas_penginapan"]) ? $data["fasilitas_penginapan"] : 0;
+    $makan = isset($data["fasilitas_makan"]) ? $data["fasilitas_makan"] : 0;
 
     $insert = "INSERT INTO pemesanan (id_user, id_paket, tanggal_pemesanan, jumlah_orang, total_harga, jumlah_hari, transportasi, makan, penginapan) 
     VALUES ('$id_user','$id_paket','$tanggal_pemesanan','$jumlah_orang','$total_harga','$jumlah_hari','$transportasi','$makan','$penginapan')";
@@ -191,6 +187,7 @@ function addDataPemesanan($data)
     mysqli_query($conn, $insert);
     return mysqli_affected_rows($conn);
 }
+
 
 
 function uploadGambar()

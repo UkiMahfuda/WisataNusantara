@@ -3,7 +3,8 @@ session_start();
 require "function.php";
 
 $query = getData("SELECT pemesanan.id_pemesanan, users.name, paket_wisata.nama_paket, paket_wisata.harga, 
-pemesanan.tanggal_pemesanan, pemesanan.jumlah_orang, pemesanan.jumlah_hari, pemesanan.total_harga 
+pemesanan.tanggal_pemesanan, pemesanan.jumlah_orang, pemesanan.jumlah_hari, pemesanan.total_harga, 
+pemesanan.transportasi, pemesanan.makan, pemesanan.penginapan
 FROM pemesanan INNER JOIN users ON pemesanan.id_user = users.id INNER JOIN paket_wisata 
 ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan DESC LIMIT 100");
 
@@ -102,6 +103,7 @@ ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan DESC LIMIT 100");
                     <th scope="col">Nama Pemesan</th>
                     <th scope="col">Paket Wisata</th>
                     <th scope="col">Harga Paket</th>
+                    <th scope="col">Pelayanan</th>
                     <th scope="col">Tgl Keberangkatan</th>
                     <th scope="col">Jumlah Orang</th>
                     <th scope="col">Hari</th>
@@ -117,7 +119,20 @@ ON pemesanan.id_paket = paket_wisata.id ORDER BY id_pemesanan DESC LIMIT 100");
                         <td><?php echo $no ?></td>
                         <td><?php echo $getData['name'] ?></td>
                         <td><?php echo $getData['nama_paket'] ?></td>
-                        <td>Rp.<?php echo number_format($getData['harga'],0,",",".") ?></td>                
+                        <td>Rp.<?php echo number_format($getData['harga'],0,",",".") ?></td>                 
+                        <td>
+                            <ul>
+                                <?php if ($getData['transportasi'] == 1) : ?>
+                                    <li>Transportasi</li>
+                                <?php endif; ?>
+                                <?php if ($getData['makan'] == 1) : ?>
+                                    <li>Makan</li>
+                                <?php endif; ?>
+                                <?php if ($getData['penginapan'] == 1) : ?>
+                                    <li>Penginapan</li>
+                                <?php endif; ?>
+                            </ul>                  
+                        </td>               
                         <td><?php echo $getData['tanggal_pemesanan'] ?></td>
                         <td><?php echo $getData['jumlah_orang'] ?> Orang</td>
                         <td><?php echo $getData['jumlah_hari'] ?> Hari</td>
